@@ -1,0 +1,61 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class Player : MonoBehaviour
+{
+
+    public float moveSpeed;
+    Rigidbody2D rb;
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Input.gyro.enabled = true;
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+        // Check if gyroscope is available
+        if (SystemInfo.supportsGyroscope)
+        {
+            // Use gyroscope input
+            Vector3 gyroInput = Input.gyro.rotationRateUnbiased;
+
+            // Rotate player based on gyroscope input
+            rb.AddForce(Vector2.right * gyroInput.y * moveSpeed);
+        }
+        else
+        {
+            // Use touch input
+            if (Input.GetMouseButton(0))
+            {
+                Vector3 touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                if (touchPosition.x < 0)
+                {
+                    rb.AddForce(Vector2.left * moveSpeed);
+                }
+                else
+                {
+                    rb.AddForce(Vector2.right * moveSpeed);
+                }
+            }
+            else
+            {
+                rb.velocity = Vector2.zero;
+            }
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Block")
+        {
+            SceneManager.LoadScene("Game");
+        }
+    }
+}
