@@ -8,12 +8,13 @@ public class Player : MonoBehaviour
 
     public float moveSpeed;
     Rigidbody2D rb;
-
+    Gyroscope steerGyro;
 
     // Start is called before the first frame update
     void Start()
     {
-        Input.gyro.enabled = true;
+        steerGyro = Input.gyro;
+        steerGyro.enabled = true;
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -24,10 +25,23 @@ public class Player : MonoBehaviour
         if (SystemInfo.supportsGyroscope)
         {
             // Use gyroscope input
-            Vector3 gyroInput = Input.gyro.rotationRateUnbiased;
+            Quaternion gyroInput = steerGyro.attitude;
+            if (gyroInput == null)
+            {
+                rb.velocity = Vector2.zero;
+            } 
+            else
+            {
+                if (gyroInput.x < 0)
+                {
+                    rb.AddForce(Vector2.left * moveSpeed);
+                }
+                else
+                {
+                    rb.AddForce(Vector2.right * moveSpeed);
+                }
+            }
 
-            // Rotate player based on gyroscope input
-            rb.AddForce(Vector2.right * gyroInput.y * moveSpeed);
         }
         else
         {
