@@ -34,11 +34,11 @@ public class Player : MonoBehaviour
             {
                 if (gyroInput.x < 0)
                 {
-                    rb.AddForce(Vector2.left * moveSpeed);
+                    rb.AddForce(Vector2.right * moveSpeed);
                 }
                 else
                 {
-                    rb.AddForce(Vector2.right * moveSpeed);
+                    rb.AddForce(Vector2.left * moveSpeed);
                 }
             }
 

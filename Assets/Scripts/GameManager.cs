@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     void FixedUpdate() {
         if (Application.platform == RuntimePlatform.Android) {
             if (Input.GetKey(KeyCode.Escape)) {
-                Application.Quit();
+                QuitGame();
             }
         }
     }
@@ -56,6 +56,11 @@ public class GameManager : MonoBehaviour
         score++;
 
         scoreText.text = score.ToString();
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
 }
