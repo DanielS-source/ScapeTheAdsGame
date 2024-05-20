@@ -1,19 +1,28 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Random = System.Random;
 
-public class GameScript : MonoBehaviour
+public class GameHandler : MonoBehaviour
 {
+    public static GameHandler instance;
 
+    public bool isInfiniteMode
+    {
+        get { return isInfiniteMode; }
+        set { isInfiniteMode = value; }
+    }
 
     public GameObject tapText;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI debugText;
+
+    public static string[] gameSceneNames = new string[] {"Game"};
 
     int score = 0;
 
@@ -25,16 +34,38 @@ public class GameScript : MonoBehaviour
     private NetworkStream stream;
 
     private byte[] buffer = new byte[1024];
+
+    private void Awake()
+    {
+
+        //Singleton and adding this gameObject to DontDestroyOnLoad
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+            
+            DontDestroyOnLoad(gameObject);
+        }
+
+        SceneManager.LoadScene("BombTimer", LoadSceneMode.Additive);
+
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        client = new TcpClient(hostname, port);
-        stream = client.GetStream();
+        //client = new TcpClient(hostname, port);
+        //stream = client.GetStream();
+
     }
 
     // Update is called once per frame
     void Update()
     {
+
     }
 
 
@@ -53,8 +84,6 @@ public class GameScript : MonoBehaviour
     {
         debugText.text = receivedData;
         Debug.Log($"Received from server: {receivedData}");
-
-        SendMessage();
     }
 
     [Serializable]
@@ -72,20 +101,43 @@ public class GameScript : MonoBehaviour
         public string type; // LevelClear, LevelFailed, LevelUnlocked
         public int level; // 1,2,3,4,5,6,...
     }
-
-    private void SendMessage()
+        
+    public void SendMessage(InfiniteData replyData)
     {
-        var replyData = new InfiniteData
-        {
-            type = "InfiniteMode",
-            stage = 10,
-            clearTime = 600000,
-            score = 500
-        };
-
         string replyJson = JsonUtility.ToJson(replyData);
         byte[] replyBytes = Encoding.UTF8.GetBytes(replyJson);
-        stream.Write(replyBytes, 0, replyBytes.Length);
+        Debug.Log($"Sending to server: {replyJson}");
+        //stream.Write(replyBytes, 0, replyBytes.Length);
     }
 
+    public void SendMessage(LevelData replyData)
+    {
+        string replyJson = JsonUtility.ToJson(replyData);
+        byte[] replyBytes = Encoding.UTF8.GetBytes(replyJson);
+        Debug.Log($"Sending to server: {replyJson}");
+        //stream.Write(replyBytes, 0, replyBytes.Length);
+    }
+
+
+    //this is expected to be called from a game scene whose game is over,
+    //with the calling game scene as parameter.
+    public static void loadNextSceneExcept(string callingScene)
+    {
+
+        string[] finallyCallableScenes = new string[] {};
+        var tempList = finallyCallableScenes.ToList();
+        foreach (string callableScene in gameSceneNames)
+        {
+            if (!callableScene.Equals(callingScene)) {
+                tempList.Add(callableScene);
+            }
+        }
+        finallyCallableScenes = tempList.ToArray();
+
+        if (finallyCallableScenes.Length > 0)
+        {
+            SceneManager.LoadScene((string) finallyCallableScenes[new Random().Next(0, finallyCallableScenes.Length)], LoadSceneMode.Additive);
+            SceneManager.UnloadScene(callingScene);
+        }
+    }
 }

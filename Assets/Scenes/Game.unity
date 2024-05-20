@@ -891,8 +891,8 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3.59, y: 3.05}
-    newSize: {x: 3.59, y: 3.05}
+    oldSize: {x: 6.5, y: 6.5}
+    newSize: {x: 6.5, y: 6.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -968,12 +968,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 115392eb8047477488d3e7fd1bb299d3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b88ad7a33f05a624a99498e63fe9aad4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 3.59, y: 3.05}
+  m_Size: {x: 6.5, y: 6.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1073,7 +1073,7 @@ SpriteRenderer:
   m_Size: {x: 7.3842177, y: 1.28}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1101002174
@@ -1507,9 +1507,6 @@ MonoBehaviour:
   spawnRate: 1
   tapText: {fileID: 1905217928}
   scoreText: {fileID: 370436833}
-  debugText: {fileID: 434829754}
-  hostname: 127.0.0.1
-  port: 8080
 --- !u!4 &2097834274
 Transform:
   m_ObjectHideFlags: 0
@@ -1581,6 +1578,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8609024206967529429, guid: 8e1b81e9f461d994b94307db6bff996b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 7febecc8b707be24a8f9060d6cf65af4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
