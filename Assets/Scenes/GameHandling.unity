@@ -152,11 +152,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae1e06000044df34e95cb7da085378b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugText: 
   tapText: {fileID: 0}
   scoreText: {fileID: 0}
-  debugText: {fileID: 0}
-  hostname: 
-  port: 0
+  hostname: localhost
+  port: 8080
 --- !u!4 &1896055798
 Transform:
   m_ObjectHideFlags: 0

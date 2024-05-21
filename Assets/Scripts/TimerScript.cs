@@ -10,6 +10,7 @@ public class TimerScript : MonoBehaviour
     private float timer = 0;
 
     public TextMeshProUGUI timerText;
+    public TextMeshProUGUI debugText;
 
     // Update is called once per frame
     void Update()
@@ -17,16 +18,11 @@ public class TimerScript : MonoBehaviour
         timer += Time.deltaTime;
         
         timerText.text = "" + (startTimer - timer).ToString("f2");
+        debugText.text = GameHandler.instance.debugText;
 
         if ((startTimer - timer) < 0)
         {
-
-            GameHandler.InfiniteData dataToBeSent = new GameHandler.InfiniteData();
-            dataToBeSent.clearTime = (int)(timer * 1000);
-            dataToBeSent.type = "InfiniteMode";
-            dataToBeSent.stage = 1;
-            dataToBeSent.score = dataToBeSent.clearTime;
-            GameHandler.instance.SendMessage(dataToBeSent);
+            GameHandler.instance.GameOver();
         }
     }
 }

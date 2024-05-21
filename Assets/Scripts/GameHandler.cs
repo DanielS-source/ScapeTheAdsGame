@@ -12,26 +12,26 @@ public class GameHandler : MonoBehaviour
 {
     public static GameHandler instance;
 
-    public bool isInfiniteMode
-    {
-        get { return isInfiniteMode; }
-        set { isInfiniteMode = value; }
-    }
+    public string debugText;
+
+    public static bool isInfiniteMode;
 
     public GameObject tapText;
     public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI debugText;
+    //public TextMeshProUGUI debugText;
 
-    public static string[] gameSceneNames = new string[] {"Game"};
+    //Array of game scene names, in order of their appearance in build settings, starting from 1
+    public static string[] gameSceneNames = new string[] {"Game1"};
+    public static int levelBeingPlayed = 0;
 
-    int score = 0;
+    public static int score = 0;
 
 
-    public string hostname;
-    public int port;
+    public string hostname = "localhost";
+    public int port = 8080;
 
     private TcpClient client;
-    private NetworkStream stream;
+    private static NetworkStream stream;
 
     private byte[] buffer = new byte[1024];
 
@@ -57,33 +57,56 @@ public class GameHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //client = new TcpClient(hostname, port);
-        //stream = client.GetStream();
-
+        HandleMessage("{\"gamemode\": \"level\", \"level\": 1}");
+        client = new TcpClient(hostname, port);
+        stream = client.GetStream();
+        StartCoroutine(ReceiveData());
     }
 
     // Update is called once per frame
     void Update()
     {
-
     }
-
 
     IEnumerator ReceiveData()
     {
-        int bytesRead = stream.Read(buffer, 0, buffer.Length);
-        string receivedData = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-        if (receivedData != null && receivedData != "")
+        while (true)
         {
-            HandleMessage(receivedData);
+            int bytesRead = stream.Read(buffer, 0, buffer.Length);
+            string receivedData = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+            if (!string.IsNullOrEmpty(receivedData))
+            {
+                HandleMessage(receivedData);
+            }
+            yield return null;
         }
-        yield return null;
+    }
+
+    [Serializable]
+    public class GameMode
+    {
+        public String gamemode; // infinite, level
+        public int level; // 1, 2, 3...
     }
 
     private void HandleMessage(String receivedData)
     {
-        debugText.text = receivedData;
         Debug.Log($"Received from server: {receivedData}");
+
+        GameMode gameMode = JsonUtility.FromJson<GameMode>(receivedData);
+
+        debugText = receivedData;
+
+        if (gameMode.gamemode.Equals("level"))
+        {
+            levelBeingPlayed = gameMode.level + 1;
+
+            SceneManager.LoadScene(gameMode.level + 1);
+        } else if (gameMode.gamemode.Equals("infinite"))
+        {
+            isInfiniteMode = true;
+            loadNextSceneExcept(null);
+        }
     }
 
     [Serializable]
@@ -102,42 +125,81 @@ public class GameHandler : MonoBehaviour
         public int level; // 1,2,3,4,5,6,...
     }
         
-    public void SendMessage(InfiniteData replyData)
+    public static void SendMessage(InfiniteData replyData)
     {
         string replyJson = JsonUtility.ToJson(replyData);
         byte[] replyBytes = Encoding.UTF8.GetBytes(replyJson);
         Debug.Log($"Sending to server: {replyJson}");
-        //stream.Write(replyBytes, 0, replyBytes.Length);
+        stream.Write(replyBytes, 0, replyBytes.Length);
     }
 
-    public void SendMessage(LevelData replyData)
+    public static void SendMessage(LevelData replyData)
     {
         string replyJson = JsonUtility.ToJson(replyData);
         byte[] replyBytes = Encoding.UTF8.GetBytes(replyJson);
         Debug.Log($"Sending to server: {replyJson}");
-        //stream.Write(replyBytes, 0, replyBytes.Length);
+        stream.Write(replyBytes, 0, replyBytes.Length);
     }
 
 
     //this is expected to be called from a game scene whose game is over,
-    //with the calling game scene as parameter.
+    //with the calling game scene name as parameter.
     public static void loadNextSceneExcept(string callingScene)
     {
-
-        string[] finallyCallableScenes = new string[] {};
-        var tempList = finallyCallableScenes.ToList();
-        foreach (string callableScene in gameSceneNames)
+        if (callingScene == null)
         {
-            if (!callableScene.Equals(callingScene)) {
-                tempList.Add(callableScene);
+            loadRandomGameScene(gameSceneNames);
+        } else
+        {
+            string[] finallyCallableScenes = new string[] {};
+            var tempList = finallyCallableScenes.ToList();
+            foreach (string callableScene in gameSceneNames)
+            {
+                if (!callableScene.Equals(callingScene)) {
+                    tempList.Add(callableScene);
+                }
             }
-        }
-        finallyCallableScenes = tempList.ToArray();
+            finallyCallableScenes = tempList.ToArray();
 
-        if (finallyCallableScenes.Length > 0)
+            if (isInfiniteMode)
+            {
+
+                if (finallyCallableScenes.Length > 0)
+                {
+                    loadRandomGameScene(finallyCallableScenes);
+                }
+        }
+        }
+    }
+
+    private static void loadRandomGameScene(string[] callableScenes)
+    {
+        int sceneIndex = new Random().Next(0, callableScenes.Length);
+        levelBeingPlayed = Array.IndexOf(gameSceneNames, Array.Find<string>(gameSceneNames, cs => cs.Equals(callableScenes[sceneIndex]))) + 1;
+        SceneManager.LoadScene(gameSceneNames[levelBeingPlayed], LoadSceneMode.Additive);
+    }
+
+    public void GameOver()
+    {
+        if (isInfiniteMode)
         {
-            SceneManager.LoadScene((string) finallyCallableScenes[new Random().Next(0, finallyCallableScenes.Length)], LoadSceneMode.Additive);
-            SceneManager.UnloadScene(callingScene);
+            InfiniteData infiniteData = new InfiniteData();
+            infiniteData.type = "InfiniteMode";
+            infiniteData.stage = levelBeingPlayed;
+            infiniteData.clearTime = (int)Time.time;
+            infiniteData.score = score;
+
+            SendMessage(infiniteData);
+            Application.Quit();
+        }
+        else
+        {
+            LevelData levelData = new LevelData();
+            levelData.type = "LevelFailed";
+            levelData.level = levelBeingPlayed;
+
+            SendMessage(levelData);
+            Application.Quit();
         }
     }
 }
