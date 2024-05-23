@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager2 : MonoBehaviour
 {
     public GameObject[] wallPrefabs;
     public float[] difficulty; // Probability distribution of each wall type
