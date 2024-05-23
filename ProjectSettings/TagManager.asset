@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Block
+  - Interactive
+  - Background
   layers:
   - Default
   - TransparentFX
@@ -41,4 +43,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 2921615743
+    locked: 0
+  - name: Interactive
+    uniqueID: 3838460191
+    locked: 0
+  - name: Blockers
+    uniqueID: 2923791469
+    locked: 0
+  - name: Text
+    uniqueID: 2072276833
     locked: 0
