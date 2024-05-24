@@ -18,7 +18,7 @@ public class GameManager2 : MonoBehaviour
     private bool gameStarted = false;
     private bool gameEnded = false; // Flag to indicate the game has ended
     private int wallsSpawned = 0;
-    private int maxWalls = 5;
+    public int maxWalls;
 
     private Button buttonScript;
 

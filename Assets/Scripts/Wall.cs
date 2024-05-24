@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Wall : MonoBehaviour
@@ -38,7 +39,7 @@ public class Wall : MonoBehaviour
             // Reduce health
             health--;
 
-            // Optionally, you can log the shake for debugging purposes
+            //log the shake for debugging purposes
             Debug.Log("Shake detected! Health reduced to: " + health);
         }
 
