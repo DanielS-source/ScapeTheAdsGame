@@ -69,8 +69,8 @@ public class GameHandler : MonoBehaviour
 
     IEnumerator ReceiveData()
     {
-        while (true)
-        {
+        //while (true)
+        //{
             int bytesRead = stream.Read(buffer, 0, buffer.Length);
             string receivedData = Encoding.UTF8.GetString(buffer, 0, bytesRead);
             if (!string.IsNullOrEmpty(receivedData))
@@ -78,7 +78,7 @@ public class GameHandler : MonoBehaviour
                 HandleMessage(receivedData);
             }
             yield return null;
-        }
+        //}
     }
 
     [Serializable]
@@ -98,6 +98,7 @@ public class GameHandler : MonoBehaviour
 
         if (gameMode.gamemode.Equals("level"))
         {
+            isInfiniteMode = false;
             levelBeingPlayed = gameMode.level;
 
             SceneManager.LoadScene(gameMode.level + 1, LoadSceneMode.Additive);
