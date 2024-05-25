@@ -1064,6 +1064,7 @@ MonoBehaviour:
   shakeText: {fileID: 1721843913}
   pressText: {fileID: 1489385469}
   scoreText: {fileID: 2100999224}
+  maxWalls: 5
 --- !u!1 &2100999222
 GameObject:
   m_ObjectHideFlags: 0
@@ -1099,7 +1100,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 725}
-  m_SizeDelta: {x: 200, y: 200}
+  m_SizeDelta: {x: 400, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2100999224
 MonoBehaviour:
