@@ -69,7 +69,7 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.tag == "Block")
         {
-            GameHandler.instance.GameOver();
+            GameHandler.instance.Win(200);
         }
     }
 }

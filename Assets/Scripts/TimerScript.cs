@@ -22,7 +22,7 @@ public class TimerScript : MonoBehaviour
 
         if ((startTimer - timer) < 0)
         {
-            GameHandler.instance.GameOver();
+            GameHandler.instance.TimeOver();
         }
     }
 }
