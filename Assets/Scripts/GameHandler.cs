@@ -27,8 +27,8 @@ public class GameHandler : MonoBehaviour
     public static int score = 0;
 
 
-    public string hostname = "localhost";
-    public int port = 8080;
+    public string hostname;
+    public int port;
 
     private TcpClient client;
     private static NetworkStream stream;
@@ -57,10 +57,9 @@ public class GameHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        HandleMessage("{\"gamemode\": \"infinite\"}");
-        //client = new TcpClient(hostname, port);
-        //stream = client.GetStream();
-        //StartCoroutine(ReceiveData());
+        client = new TcpClient(hostname, port);
+        stream = client.GetStream();
+        StartCoroutine(ReceiveData());
     }
 
     // Update is called once per frame
@@ -130,7 +129,7 @@ public class GameHandler : MonoBehaviour
         string replyJson = JsonUtility.ToJson(replyData);
         byte[] replyBytes = Encoding.UTF8.GetBytes(replyJson);
         Debug.Log($"Sending to server: {replyJson}");
-        //stream.Write(replyBytes, 0, replyBytes.Length);
+        stream.Write(replyBytes, 0, replyBytes.Length);
     }
 
     public static void SendMessage(LevelData replyData)
@@ -138,7 +137,7 @@ public class GameHandler : MonoBehaviour
         string replyJson = JsonUtility.ToJson(replyData);
         byte[] replyBytes = Encoding.UTF8.GetBytes(replyJson);
         Debug.Log($"Sending to server: {replyJson}");
-        //stream.Write(replyBytes, 0, replyBytes.Length);
+        stream.Write(replyBytes, 0, replyBytes.Length);
     }
 
 
