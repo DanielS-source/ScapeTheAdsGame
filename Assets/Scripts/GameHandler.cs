@@ -21,7 +21,7 @@ public class GameHandler : MonoBehaviour
     //public TextMeshProUGUI debugText;
 
     //Array of game scene names, in order of their appearance in build settings, starting from 1
-    public static string[] gameSceneNames = new string[] {"Game1","Game2"};
+    public static string[] gameSceneNames = new string[] {"Game1","Game2", "Game3"};
     public static int? levelBeingPlayed = null;
 
     public static int score = 0;
@@ -69,16 +69,13 @@ public class GameHandler : MonoBehaviour
 
     IEnumerator ReceiveData()
     {
-        //while (true)
-        //{
-            int bytesRead = stream.Read(buffer, 0, buffer.Length);
-            string receivedData = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-            if (!string.IsNullOrEmpty(receivedData))
-            {
-                HandleMessage(receivedData);
-            }
-            yield return null;
-        //}
+        int bytesRead = stream.Read(buffer, 0, buffer.Length);
+        string receivedData = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+        if (!string.IsNullOrEmpty(receivedData))
+        {
+            HandleMessage(receivedData);
+        }
+        yield return null;
     }
 
     [Serializable]
