@@ -12,13 +12,13 @@ public class CubeController : MonoBehaviour
 
     void Start()
     {
-        // Assign a random spin speed between 0.5 and 5.0
         spinSpeed = Random.Range(0.5f, 5.0f);
 
         useGyro = SystemInfo.supportsGyroscope;
 
         if (useGyro)
         {
+            spinSpeed = Random.Range(1.5f, 8.0f);
             Input.gyro.enabled = true;
         }
     }
@@ -38,10 +38,10 @@ public class CubeController : MonoBehaviour
     private void HandleGyroInput()
     {
         Quaternion gyroInput = Input.gyro.attitude;
-        Quaternion adjustedGyroInput = Quaternion.Euler(90f, 0f, 0f) * new Quaternion(-gyroInput.x, -gyroInput.y, gyroInput.z, gyroInput.w);
+        transform.rotation = Quaternion.Euler(90f, 0f, 0f) * new Quaternion(-gyroInput.x * spinSpeed, -gyroInput.y * spinSpeed, gyroInput.z * spinSpeed, gyroInput.w);
 
         // Apply spin speed to the gyroscope input
-        transform.rotation = Quaternion.Slerp(transform.rotation, adjustedGyroInput, spinSpeed * Time.deltaTime);
+        //transform.rotation = Quaternion.Slerp(transform.rotation, adjustedGyroInput, spinSpeed * Time.deltaTime);
     }
 
     private void HandleMouseInput()

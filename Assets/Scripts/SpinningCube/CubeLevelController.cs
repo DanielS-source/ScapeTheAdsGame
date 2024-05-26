@@ -91,7 +91,7 @@ public class CubeLevelController : MonoBehaviour
         if (cubesRemaining <= 0)
         {
             Debug.Log("You win!");
-            // Implement win condition logic (e.g., show a win screen, restart game, etc.)
+            GameHandler.instance.Win(150);
         }
         else
         {
