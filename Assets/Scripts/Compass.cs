@@ -1,12 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+using System;
 using UnityEngine;
 
 public class CompassController : MonoBehaviour
 {
-    public float compassSmooth = 0.5f;
-    public TextMeshProUGUI debugText;
     // Use this for initialization
     void Start()
     {
@@ -21,13 +17,12 @@ public class CompassController : MonoBehaviour
     private void Update()
     {
         //do color change based on compass
-        float currentMagneticHeading = (float)System.Math.Round(Input.compass.magneticHeading, 2);
-        gameObject.GetComponent<SpriteRenderer>().material.color = new Color(0f, ((float)System.Math.Cos(currentMagneticHeading)) * 255, 0f, 1f);
+        float currentMagneticHeading = Input.compass.magneticHeading;
+        gameObject.GetComponent<SpriteRenderer>().color = new Color(0, (((float)Math.Cos(Math.PI / 180 * currentMagneticHeading)) + 1)/2, 0);
 
-        debugText.text = "" + currentMagneticHeading + "   " + System.Math.Cos(currentMagneticHeading)* 255;
-        if (currentMagneticHeading < compassSmooth || currentMagneticHeading > 360 - compassSmooth)
+        if (currentMagneticHeading < 10 || currentMagneticHeading > 350)
         {
-            debugText.text = "WIN!";
+            GameHandler.instance.Win(200);
         }
     }
 }
