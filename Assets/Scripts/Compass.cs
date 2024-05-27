@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class CompassController : MonoBehaviour
 {
+    public float compassSmooth = 0.5f;
+    private float m_lastMagneticHeading = 0f;
     // Use this for initialization
     void Start()
     {
@@ -20,9 +22,13 @@ public class CompassController : MonoBehaviour
         float currentMagneticHeading = Input.compass.magneticHeading;
         gameObject.GetComponent<SpriteRenderer>().color = new Color(0, (((float)Math.Cos(Math.PI / 180 * currentMagneticHeading)) + 1)/2, 0);
 
-        if (currentMagneticHeading < 10 || currentMagneticHeading > 350)
+        if (m_lastMagneticHeading < currentMagneticHeading - compassSmooth || m_lastMagneticHeading > currentMagneticHeading + compassSmooth)
         {
-            GameHandler.instance.Win(200);
+            m_lastMagneticHeading = currentMagneticHeading;
+            if (m_lastMagneticHeading < 10 || m_lastMagneticHeading > 350)
+            {
+                GameHandler.instance.Win(200);
+            }
         }
     }
 }
