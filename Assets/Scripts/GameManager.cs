@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     public GameObject tapText;
     public TextMeshProUGUI scoreText;
 
+    public int winScore = 10;
+    public int decreaseScore = 2;
     int score = 0;
 
     public static GameManager Instance { get; private set; }
@@ -76,7 +78,7 @@ public class GameManager : MonoBehaviour
 
         scoreText.text = score.ToString();
 
-        if (score >= 20) {
+        if (score >= winScore) {
             GameHandler.instance.Win(200);
         }
 
@@ -84,13 +86,12 @@ public class GameManager : MonoBehaviour
 
     public void DecreaseScore()
     {
-        int decreasePoints = 3;
-        if (score <= decreasePoints)
+        if (score <= decreaseScore)
         {
             score = 0;
         }
         else {
-            score -= decreasePoints;
+            score -= decreaseScore;
         }
         scoreText.text = score.ToString();
 
