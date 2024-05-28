@@ -16,6 +16,23 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI scoreText;
 
     int score = 0;
+
+    public static GameManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        // Singleton pattern implementation
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+
     void Start()
     {
 
@@ -58,6 +75,25 @@ public class GameManager : MonoBehaviour
         score++;
 
         scoreText.text = score.ToString();
+
+        if (score >= 20) {
+            GameHandler.instance.Win(200);
+        }
+
+    }
+
+    public void DecreaseScore()
+    {
+        int decreasePoints = 3;
+        if (score <= decreasePoints)
+        {
+            score = 0;
+        }
+        else {
+            score -= decreasePoints;
+        }
+        scoreText.text = score.ToString();
+
     }
 
     public void QuitGame()

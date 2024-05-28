@@ -69,7 +69,9 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.tag == "Block")
         {
-            GameHandler.instance.Win(200);
+            Debug.Log("Collision");
+            GameManager.Instance.DecreaseScore();
+            Destroy(collision.gameObject);
         }
     }
 }
