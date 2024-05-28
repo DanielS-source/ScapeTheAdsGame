@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class TimerScript : MonoBehaviour
 {
-    public TimerScript instance;
+    public static TimerScript instance;
 
     public float startTimer = 20;
 
@@ -45,5 +45,10 @@ public class TimerScript : MonoBehaviour
             finished = true;
             GameHandler.instance.TimeOver();
         }
+    }
+
+    public void ExtendTimer()
+    {
+        timer -= 5;
     }
 }

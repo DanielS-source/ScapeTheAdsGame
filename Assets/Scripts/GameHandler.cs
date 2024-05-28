@@ -200,6 +200,7 @@ public class GameHandler : MonoBehaviour
         if (isInfiniteMode)
         {
             score = score + accScore;
+            TimerScript.instance.ExtendTimer();
             Continue();
         }
         else

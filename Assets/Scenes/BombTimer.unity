@@ -503,7 +503,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e022f46a194858b48a01735a08f7ffb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startTimer: 15
+  startTimer: 20
   timerText: {fileID: 885524639}
   debugText: {fileID: 606837834}
 --- !u!1 &1999214295
