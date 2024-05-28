@@ -111,10 +111,6 @@ public class GameManager2 : MonoBehaviour
     // Exits the game or application
     void ExitGame()
     {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+        GameHandler.instance.Win(maxWalls * 100); //Application.Quit();
     }
 }
